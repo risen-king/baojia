@@ -8,6 +8,7 @@ use common\models\NewsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
  
 
@@ -76,15 +77,49 @@ class NewsController extends Controller
      */
     public function actionCreate()
     {
-        $model = new News();
+         $model = new News();
+         
+          $model = new News();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+//            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//                return $this->redirect(['view', 'id' => $model->id]);
+//            } else {
+//                return $this->render('create', [
+//                    'model' => $model,
+//                ]);
+//            }
+         
+          if ( $model->load(Yii::$app->request->post())  ) {
+                
+                    $_clone = clone  $model;
+                    $_clone->thumb = UploadedFile::getInstance($_clone, 'thumb');
+                    $save_name =  'upload/' . $_clone->thumb->baseName. '.' .  $_clone->thumb->extension;
+                    $_clone->thumb->saveAs($save_name );
+                    unset ($_clone);
+                     
+                    $model->thumb = $save_name;
+                    
+                    $result = $model->save();
+                    
+                    return $this->redirect(['view', 'id' => $model->id]);
+             
+          }else {
+                    return $this->render('create', [
+                        'model' => $model,
+                    ]);
         }
+          
+
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            
+//           
+//            
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        } else {
+//            return $this->render('create', [
+//                'model' => $model,
+//            ]);
+//        }
     }
 
     /**
@@ -96,10 +131,13 @@ class NewsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+       
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            // \yii\helpers\VarDumper::dump($model->attributes);die;
             return $this->render('update', [
                 'model' => $model,
             ]);

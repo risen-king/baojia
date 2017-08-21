@@ -62,6 +62,7 @@ class News extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
+            'thumb' => Yii::t('app', 'Thumb'),
             'content' => Yii::t('app', 'Content'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -76,4 +77,6 @@ class News extends \yii\db\ActiveRecord
     {
         return new NewsQuery(get_called_class());
     }
+    
+   
 }
