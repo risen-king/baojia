@@ -9,11 +9,22 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+ 
+
 /**
  * NewsController implements the CRUD actions for News model.
  */
 class NewsController extends Controller
 {
+    
+    public function actions(){
+        return [
+            'Kupload' => [
+                    'class' => 'pjkui\kindeditor\KindEditorAction',
+            ]
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -28,6 +39,8 @@ class NewsController extends Controller
             ],
         ];
     }
+    
+    
 
     /**
      * Lists all News models.
