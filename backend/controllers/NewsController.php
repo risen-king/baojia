@@ -137,7 +137,7 @@ class NewsController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            // \yii\helpers\VarDumper::dump($model->attributes);die;
+           
             return $this->render('update', [
                 'model' => $model,
             ]);

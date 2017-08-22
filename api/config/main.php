@@ -6,15 +6,24 @@ $params = array_merge(
     require(__DIR__ . '/params-local.php')
 );
 
+$urlManager  = require(__DIR__ . '/urlManager.php');
+
 return [
     'id' => 'app-api',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+         'v1' => [
+                    'class' => 'api\modules\v1\Module',
+         ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-api',
+             'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -37,14 +46,7 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
+        'urlManager' => $urlManager,
     ],
     'params' => $params,
 ];
