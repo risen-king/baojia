@@ -49,6 +49,11 @@ class  Datetime{
         $week_end=date('Y-m-d',strtotime("$week_start +6 days"));
         return [$week_start,$week_end];
     }
+    
+     public static function  getWeek($timestamp){
+            $weekarray=array("日","一","二","三","四","五","六"); //先定义一个数组
+            return  "星期".$weekarray[date("w",$timestamp)];
+    }
 
 }
  
