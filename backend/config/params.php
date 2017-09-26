@@ -1,4 +1,8 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'ahcj_11@163.com',
+    'mdm.admin.configs' => [
+         'userTable' => '{{%admin_user}}',
+  
+     ]
 ];

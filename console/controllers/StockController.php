@@ -1,5 +1,5 @@
 <?php
-namespace app\commands;
+namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
@@ -9,8 +9,8 @@ use yii\db\Query;
 use QL\QueryList;
 
  
-use app\models\Stock;
-use app\models\StockPrice;
+use common\models\Stock;
+use common\models\StockPrice;
 
 class StockController extends Controller
 {

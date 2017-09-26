@@ -230,7 +230,7 @@ use yii\helpers\Html;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs"><?= !Yii::$app->user->isGuest ?   Yii::$app->user->identity->username  : 'Guest' ;?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -239,8 +239,17 @@ use yii\helpers\Html;
                                  alt="User Image"/>
 
                             <p>
-                                Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                
+                                
+                                <?php
+                                    if(  !Yii::$app->user->isGuest ){
+                                ?>
+                                        <?=  Yii::$app->user->identity->username ?> - Web Developer
+                                        
+                                        <small>Member since <?=  date('Y-m-d',Yii::$app->user->identity->created_at)  ?> </small>
+                                
+                                <?php };?>
+                                
                             </p>
                         </li>
                         <!-- Menu Body -->
@@ -279,3 +288,4 @@ use yii\helpers\Html;
         </div>
     </nav>
 </header>
+

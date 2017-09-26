@@ -15,7 +15,9 @@ namespace common\helper;
  */
 class Tree {
     
-    /**
+ 
+    
+     /**
     * 获取子孙树
     * @param   array        $data   待分类的数据
     * @param   int/string   $pid     要找的子节点id
@@ -39,6 +41,7 @@ class Tree {
         }
         return $treeList;
     }
+    
     
     
     public static function getSubTree(&$data , $id = 0) {

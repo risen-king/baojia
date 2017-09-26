@@ -6,19 +6,22 @@ use yii\base\Model;
 
 use api\models\User;
 
+use common\helper\Password;
+
 /**
  * Login form
  */
 class LoginForm extends Model
 {
-    public $username;
+
+    /** @var string  用户邮箱,用户名,或手机号 */
+    public $login;
     public $password;
     public $rememberMe = true;
     
     //当前登陆 user 对象
-    private $_user;
-    
-   
+    private $user;
+
 
     /**
      * @inheritdoc
@@ -26,8 +29,9 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => '用户名',
-            'password' => '密码',
+            'login'      => Yii::t('user', 'Login'),
+            'password'   => Yii::t('user', 'Password'),
+            'rememberMe' => Yii::t('user', 'Remember me next time'),
         ];
     }
     
@@ -37,31 +41,15 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
-            [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+            'loginTrim' => ['login', 'trim'],
+            'rememberMe' => ['rememberMe', 'boolean'],
+            'requiredFields' => [['login', 'password'], 'required'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            'passwordValidate' => ['password', 'validatePassword'],
         ];
     }
 
-   /**
-     * 自定义的密码认证方法
-     */
-    public function validatePassword($attribute, $params)
-    {
-         if (!$this->hasErrors()) {
-                    
-                    $user = $this->getUser();
-                    
-                    if (! $user  || ! $user->validatePassword($this->password)) {
-                        
-                             $this->addError($attribute, '用户名或密码错误.');
-                             
-                    }
-         }
-    }
+
     
     
 
@@ -72,43 +60,46 @@ class LoginForm extends Model
      */
     public function login()
     {
-        if ( $this->validate() ) { 
-            
-            
-            $this->onGenerateAccessToken();
-            
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+        if ( $this->validate() ) {
+
+            $this->user->last_login_at=time();
+            $this->user->generateAccessToken();
+            $this->user->save(false);
+
+            return Yii::$app->user->login($this->user, $this->rememberMe ? 3600*24*30 : 0);
             
          }
          
-         return false;
+        return false;
     }
 
 
     /**
-     * 根据用户名获取用户的认证信息
-     *
-     * @return User|null
+     * 自定义的密码认证方法
      */
-    protected function getUser()
+    public function validatePassword($attribute, $params)
     {
-         if ($this->_user === null) {
-                    $this->_user = User::findByUsername($this->username);
-         }
 
-         return $this->_user;
+
+        if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)){
+            $this->addError($attribute, Yii::t('user', '用户名或密码错误.') );
+
+        }
+
+
     }
-    
-    /**
-     * 登录校验成功后，为用户生成新的token
-     * 如果token失效，则重新生成token
-     */
-    public   function onGenerateAccessToken()
+
+
+    /** @inheritdoc */
+    public function beforeValidate()
     {
-       
-        if ( !User::checkAccessToken( $this->_user->access_token) ) {
-                $this->_user->generateAccessToken();
-                $this->_user->save(false);
+        if (parent::beforeValidate()) {
+
+            $this->user = User::findByMobile(trim($this->login));
+
+            return true;
+        } else {
+            return false;
         }
     }
 }

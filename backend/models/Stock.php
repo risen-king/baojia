@@ -4,6 +4,12 @@ namespace backend\models;
 
 use Yii;
 
+use common\component\UploadBehavior;
+use common\component\TimestampBehavior;
+
+use backend\models\Category;
+ 
+
 /**
  * This is the model class for table "stock".
  *
@@ -15,6 +21,18 @@ use Yii;
  */
 class Stock extends \yii\db\ActiveRecord
 {
+     public $catname;
+     
+     
+     public function behaviors()
+    {
+        return [
+             ['class' => TimestampBehavior::className()],
+             ['class' => UploadBehavior::className() ],
+        ];
+    }
+    
+    
     /**
      * @inheritdoc
      */
@@ -30,8 +48,8 @@ class Stock extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['ipo_date'], 'safe'],
-            [['symbol'], 'string', 'max' => 6],
+            [['ipo_date','catid','content','price','onsale'], 'safe'],
+            [['symbol',], 'string', 'max' => 6],
             [['code'], 'string', 'max' => 8],
             [['name'], 'string', 'max' => 50],
         ];
@@ -44,10 +62,31 @@ class Stock extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'symbol' => 'Symbol',
-            'code' => 'Code',
-            'name' => 'Name',
-            'ipo_date' => 'Ipo Date',
+            'catid' => \Yii::t('common',' Category Name'), 
+            'symbol' => \Yii::t('common','Product Symbol'), 
+            'name' => \Yii::t('common','Product Name'), 
+            'onsale'=>  \Yii::t('common',   'On Sale'), 
+            'ipo_date' => \Yii::t('common','IPO Date'),
+            'catname' => \Yii::t('common','Category Name'),
+            'thumb'=>  \Yii::t('common','Thumb'),
+            'content'=>\Yii::t('common','Content'),
+            'price'=>\Yii::t('common','Price'),
         ];
     }
+    
+    
+    
+    
+    public function getCategory(){
+          return   $this->hasOne(Category::className(), ['id'=>'catid']) ;
+    }
+    
+   public function getTree(){
+       
+       return Category::getSelectTree();
+            
+    }
+    
+    
+     
 }

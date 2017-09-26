@@ -10,10 +10,11 @@ use common\models\User as BaseUser;
  
 class User extends BaseUser
 {
+
+
     /**
     * 生成 access_token
     */
-     # 生成access_token  
     public function generateAccessToken()  
     {  
            $this->access_token = Yii::$app->security->generateRandomString(). '_' . time();
@@ -38,15 +39,16 @@ class User extends BaseUser
       *  @return  bool
       */
      public static function checkAccessToken($token){
-            if( empty($token) ){
-                     return false;
-             }
 
-           $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+         if( empty($token) ){
+             return false;
+         }
 
-           $expire =  isset ( Yii::$app->params['user.accessTokenExpire'] ) && !empty( Yii::$app->params['user.accessTokenExpire'] ) ? Yii::$app->params['user.accessTokenExpire'] : 3600;
+         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
 
-           return $timestamp + $expire >= time();
+         $expire =  isset ( Yii::$app->params['user.accessTokenExpire'] ) && !empty( Yii::$app->params['user.accessTokenExpire'] ) ? Yii::$app->params['user.accessTokenExpire'] : 3600;
+
+         return $timestamp + $expire >= time();
      } 
          
          
@@ -57,7 +59,7 @@ class User extends BaseUser
     {
 
          if(  !static::checkAccessToken($token) ){
-                throw  new  UnauthorizedHttpException('access_token is invalid');
+            throw  new  UnauthorizedHttpException('access_token is invalid');
          }
         
          return static::findOne(['access_token' => $token]);

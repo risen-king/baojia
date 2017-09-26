@@ -9,7 +9,7 @@ class Stock extends ActiveRecord
      public function rules()
     {
         return [
-            [['symbol', 'code','name','ipo_date'], 'safe'],
+            [['symbol', 'code','name','ipo_date','changed_rate'], 'safe'],
         ];
     }
 }

@@ -1,5 +1,13 @@
 <?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 namespace common\helper;
+
 
 class  Util{
     public static function format($status,$data,$message){
@@ -40,21 +48,7 @@ class  Util{
         
     }
     
-    public static function upload($instance){
-          
-         $rootPath  =  \Yii::$app->basePath . '/../'; //根目录
-          
-          $newName = 'upload/'. 
-                                $instance->baseName  . '-' .
-                                time(). '.' .
-                                $instance->extension;
-         
-          $instance->saveAs($rootPath.$newName);
     
-          
-          return  $newName ;
- 
-    }
     
     //产生指定位数的随机数
     public static function generateNumber($length=4){

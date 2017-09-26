@@ -23,7 +23,12 @@
         "kartik-v/yii2-widget-datepicker": "@dev",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
-        "mdmsoft/yii2-admin": "~2.0"
+        "mdmsoft/yii2-admin": "~2.0",
+        "kartik-v/yii2-widget-switchinput": "*",
+        "kartik-v/yii2-tabs-x": "*",
+        "kartik-v/yii2-widget-activeform": "@dev",
+        "dektrium/yii2-user": "^0.9.12",
+        "dektrium/yii2-rbac": "1.0.0-alpha@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

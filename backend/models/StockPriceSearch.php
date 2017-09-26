@@ -18,8 +18,8 @@ class StockPriceSearch extends StockPrice
     public function rules()
     {
         return [
-            [['id', 'symbol', 'vol', 'aomount', 'gmw', 'emv'], 'integer'],
-            [['date', 'name'], 'safe'],
+            [['id', 'vol', 'aomount', 'gmw', 'emv'], 'integer'],
+            [['date', 'name','symbol',], 'safe'],
             [['close', 'high', 'low', 'open', 'adj_close', 'change', 'changed_rate', 'exchange'], 'number'],
         ];
     }
@@ -45,12 +45,25 @@ class StockPriceSearch extends StockPrice
         $query = StockPrice::find();
 
         // add conditions that should always apply here
-
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=>[
+                'defaultOrder' =>[
+                    'date' => SORT_DESC
+                ]
+            ]
         ]);
 
         $this->load($params);
+        
+        if($params['symbol']){
+             $query->andFilterWhere([
+                 'symbol'=>$params['symbol']
+             ]);
+        }
+        
+       
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails

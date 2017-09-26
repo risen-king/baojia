@@ -5,7 +5,11 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+
+use backend\models\StockSearch as ProductSearch;
+ 
+ 
+use backend\models\LoginForm;
 
 /**
  * Site controller
@@ -18,26 +22,26 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'rules' => [
+//                    [
+//                        'actions' => ['login', 'error'],
+//                        'allow' => true,
+//                    ],
+//                    [
+//                        'actions' => ['logout', 'index'],
+//                        'allow' => true,
+//                        'roles' => ['@'],
+//                    ],
+//                ],
+//            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'logout' => ['post'],
+//                ],
+//            ],
         ];
     }
 
@@ -60,9 +64,20 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+          
+          
+          
+         $highProducts = ProductSearch::getTop5();
+          $lowProducts = ProductSearch::getTop5(['price' => SORT_ASC]);
+        
+        return $this->render('index',[
+            'highProducts' => $highProducts,
+            'lowProducts'=> $lowProducts
+        ]);
     }
 
+    
+ 
     /**
      * Login action.
      *
