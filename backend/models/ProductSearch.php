@@ -5,12 +5,12 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\Stock;
+use backend\models\Product;
 
 /**
- * StockSearch represents the model behind the search form about `backend\models\Stock`.
+ * ProductSearch represents the model behind the search form about `backend\models\Product`.
  */
-class StockSearch extends Stock
+class ProductSearch extends Product
 {
     
    
@@ -21,7 +21,7 @@ class StockSearch extends Stock
     {
         return [
             [['id'], 'integer'],
-            [['symbol', 'code', 'name', 'ipo_date','catname'], 'safe'],
+            [['symbol', 'code', 'name','catname'], 'safe'],
         ];
     }
     
@@ -31,7 +31,7 @@ class StockSearch extends Stock
     public function attributeLabels()
     {
       
-         $_lables = (new Stock)->attributeLabels();
+         $_lables = (new Product)->attributeLabels();
         
          return $_lables;
     }
@@ -54,7 +54,7 @@ class StockSearch extends Stock
      */
     public function search($params)
     {
-        $query = Stock::find();
+        $query = Product::find();
         
         $query->joinWith(['category']); 
 
@@ -68,7 +68,6 @@ class StockSearch extends Stock
             'attributes' => [
                 'symbol',
                 'name',
-                'ipo_date',
                 /* 其它字段不要动 */    
                 /*  下面这段是加入的 */
                 'catname' => [
@@ -88,7 +87,7 @@ class StockSearch extends Stock
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'ipo_date' => $this->ipo_date,
+
         ]);
 
         $query->andFilterWhere(['like', 'symbol', $this->symbol])
@@ -103,7 +102,7 @@ class StockSearch extends Stock
     
       public  static function getTop5($order=[]){
    
-        $query = Stock::find();
+        $query = Product::find();
         $query->joinWith(['category']); 
         
         if(!$order){

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\StockPrice */
+/* @var $model backend\models\ProductPrice */
 
 $this->title = \Yii::t('common','Update Product Price:') . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Product Prices', 'url' => ['index']];

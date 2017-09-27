@@ -9,7 +9,7 @@ use yii\rest\ActiveController;
 
 class  ProductController  extends ActiveController
 {
-    public $modelClass = 'api\models\Stock';
+    public $modelClass = 'api\models\Product';
     
     public $serializer = [
           'class' => 'yii\rest\Serializer',

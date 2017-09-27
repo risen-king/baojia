@@ -1,10 +1,8 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 use Yii;
-
-use backend\models\Stock as Product;
 
 /**
  * This is the model class for table "stock_price".
@@ -26,14 +24,14 @@ use backend\models\Stock as Product;
  * @property string $gmw
  * @property string $emv
  */
-class StockPrice extends \yii\db\ActiveRecord
+class ProductPrice extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'stock_price';
+        return 'product_price';
     }
 
     /**
@@ -44,7 +42,7 @@ class StockPrice extends \yii\db\ActiveRecord
         return [
             [['date'], 'safe'],
             [['symbol'], 'required'],
-            [['symbol', 'vol', 'aomount', 'gmw', 'emv'], 'integer'],
+            [['symbol', 'vol', 'amount', 'gmw', 'emv'], 'integer'],
             [['close', 'high', 'low', 'open', 'adj_close', 'change', 'changed_rate', 'exchange'], 'number'],
             [['name'], 'string', 'max' => 50],
         ];
@@ -64,53 +62,23 @@ class StockPrice extends \yii\db\ActiveRecord
             'high' => \Yii::t('common','High Price'),
             'low' => \Yii::t('common','Low Price'),
             'open' =>\Yii::t('common','Open Price'),
-            
-            'adj_close' => 'Adj Close',
-            'change' => 'Change',
-            'changed_rate' => 'Changed Rate',
-            'exchange' => 'Exchange',
-            'vol' => 'Vol',
-            'aomount' => 'Aomount',
-            'gmw' => 'Gmw',
-            'emv' => 'Emv',
+            'adj_close' => '昨收',
+            'changed_rate' => '涨跌幅',
+            'change' => '涨跌额',
+            'vol' => '成交量',
+            'amount' => '成交额',
+
         ];
     }
-    
-    
+
+
+
+
     public function getProduct(){
         return $this->hasOne(Product::className(), ['symbol'=>'symbol']);
     }
- 
-    
-    /*
-     * 如果插入数据或更新数据，则更新Product价格
-     */
-    public   function afterSave($insert, $changedAttributes) {
-      
-        parent::afterSave($insert, $changedAttributes);
-        
-        if( $insert ){
-            
-              $this->product->price = $this->close;
-              
-              $this->product->save();
-              
-        }elseif ( array_key_exists('close', $changedAttributes) ) {
-            
-            $latest = static::find()
-                    ->where(['symbol'=>$this->symbol ])
-                    ->orderBy('date DESC')
-                    ->limit(1)
-                    ->one();
-           
-            $this->product->price = $latest->close;
-            
-            $this->product->save();
-            
-        }
-        
-         
- 
 
+    public function  getName(){
+        return $this->product ? $this->product->name : '';
     }
 }

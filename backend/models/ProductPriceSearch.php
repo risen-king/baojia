@@ -5,12 +5,13 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\StockPrice;
+
+use backend\models\ProductPrice;
 
 /**
- * StockPriceSearch represents the model behind the search form about `backend\models\StockPrice`.
+ * ProductPriceSearch represents the model behind the search form about `backend\models\ProductPrice`.
  */
-class StockPriceSearch extends StockPrice
+class ProductPriceSearch extends ProductPrice
 {
     /**
      * @inheritdoc
@@ -18,9 +19,9 @@ class StockPriceSearch extends StockPrice
     public function rules()
     {
         return [
-            [['id', 'vol', 'aomount', 'gmw', 'emv'], 'integer'],
+            [['id', 'vol', 'amount'], 'integer'],
             [['date', 'name','symbol',], 'safe'],
-            [['close', 'high', 'low', 'open', 'adj_close', 'change', 'changed_rate', 'exchange'], 'number'],
+            [['close', 'high', 'low', 'open', 'adj_close','change','changed_rate',  'exchange'], 'number'],
         ];
     }
 
@@ -42,9 +43,11 @@ class StockPriceSearch extends StockPrice
      */
     public function search($params)
     {
-        $query = StockPrice::find();
+        $query = ProductPrice::find();
 
-        // add conditions that should always apply here
+        $query->with('product');
+
+            // add conditions that should always apply here
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -77,17 +80,17 @@ class StockPriceSearch extends StockPrice
             'date' => $this->date,
             'symbol' => $this->symbol,
             'close' => $this->close,
-            'high' => $this->high,
-            'low' => $this->low,
-            'open' => $this->open,
             'adj_close' => $this->adj_close,
             'change' => $this->change,
             'changed_rate' => $this->changed_rate,
+            'high' => $this->high,
+            'low' => $this->low,
+            'open' => $this->open,
+
             'exchange' => $this->exchange,
             'vol' => $this->vol,
-            'aomount' => $this->aomount,
-            'gmw' => $this->gmw,
-            'emv' => $this->emv,
+            //'amount' => $this->amount,
+
         ]);
 
           //$query->andFilterWhere(['like', 'name', $this->name]);

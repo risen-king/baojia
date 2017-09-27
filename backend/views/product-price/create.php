@@ -4,10 +4,10 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\StockPrice */
+/* @var $model backend\models\ProductPrice */
 
 $this->title = 'Create Product Price';
-$this->params['breadcrumbs'][] = ['label' => 'Stock Prices', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Product Prices', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stock-price-create">

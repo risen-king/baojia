@@ -10,7 +10,7 @@ use QL\QueryList;
 
  
 use common\models\Stock;
-use common\models\StockPrice;
+use common\models\ProductPrice;
 
 class StockController extends Controller
 {
@@ -482,7 +482,7 @@ class StockController extends Controller
                     $stockPrice = null;
                   
 
-                    // $stockPrice = StockPrice::find()->limit(1)
+                    // $stockPrice = ProductPrice::find()->limit(1)
                     //                 ->where([
                     //                     'symbol'=>$item['symbol'],
                     //                     'date'=>$item['date']
@@ -493,7 +493,7 @@ class StockController extends Controller
                     if( !$stockPrice )
                     {
 
-                        $stockPrice = new StockPrice;
+                        $stockPrice = new ProductPrice;
 
                         $stockPrice->attributes = $item;
 

@@ -11,7 +11,7 @@ use kartik\switchinput\SwitchInput;
 
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Stock */
+/* @var $model backend\models\Product */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -26,6 +26,8 @@ use kartik\switchinput\SwitchInput;
  
     
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'adj_close')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
     
@@ -65,17 +67,7 @@ use kartik\switchinput\SwitchInput;
      ?>
     
     
-    
- 
 
-    <?= $form->field($model, 'ipo_date')->widget(DateTimePicker::className(),[
-                    'options' => ['placeholder' => ''], 
-                    'pluginOptions' => [ 
-                        'autoclose' => true, 
-                        'todayHighlight' => true, 
-                        'format' => 'yyyy-mm-dd HH:ii:ss', 
-                    ] 
-    ]) ?>
     
     <?= $form->field($model, 'content')->widget( KindEditor::className(),[
                     'clientOptions'=>[

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\StockSearch */
+/* @var $searchModel backend\models\ProductSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = \Yii::t('common','Products'); 
@@ -28,8 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
             'name',
+            'adj_close',
             'price',
-            'ipo_date',
+            'rate',
+
 
             [
                 'class' => 'yii\grid\ActionColumn',

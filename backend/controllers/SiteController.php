@@ -6,7 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
-use backend\models\StockSearch as ProductSearch;
+use backend\models\ProductSearch as ProductSearch;
  
  
 use backend\models\LoginForm;
