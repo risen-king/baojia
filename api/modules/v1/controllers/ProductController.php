@@ -33,6 +33,28 @@ class  ProductController  extends ActiveController
           
           return  $behaviors;
     }
+
+
+    public function actionPrices(){
+
+        $modelClass = 'api\models\ProductPrice';
+
+        $symbol = \Yii::$app->request->get('word','');
+
+        $query = $modelClass::find()
+            ->select(['date','open','close','low','high'])
+            ->where(['symbol'=>$symbol])
+            ;
+
+        return new ActiveDataProvider([
+            'query'=>$query,
+            'pagination'=>[
+                'pageSize'=>150
+            ]
+        ]);
+
+
+    }
     
     public function actionSearch(){
 

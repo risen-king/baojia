@@ -33,6 +33,7 @@ return [
         'controller' =>  'v1/product',
         'extraPatterns' => [
             'OPTIONS,GET  search/<word>' => 'search',
+            'OPTIONS,GET  prices/<word>' => 'prices',
         ]
 
      ],
