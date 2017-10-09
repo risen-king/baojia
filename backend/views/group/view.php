@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model backend\models\MemberGroup */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Member Groups', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'User Groups', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="member-group-view">

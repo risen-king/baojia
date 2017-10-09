@@ -4,6 +4,8 @@ namespace api\models;
 
 use Yii;
 
+use common\models\Article as ArticleBase;
+
 /**
  * This is the model class for table "news".
  *
@@ -14,42 +16,28 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class Article extends \yii\db\ActiveRecord
+class Article extends ArticleBase
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
+
+    public function fields()
     {
-        return 'article';
+        $fields = parent::fields();
+
+        unset($fields['content']);
+
+        $fields['created_at'] = function($model) {
+                return date('y-m-d', time($model->created_at));
+            };
+
+        $fields['updated_at'] = function($model) {
+            return date('y-m-d', time($model->updated_at));
+        };
+
+        return $fields;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['title'], 'required'],
-            [['content'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['title'], 'string', 'max' => 50],
-            [['thumb'], 'string', 'max' => 250],
-        ];
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'thumb' => 'Thumb',
-            'content' => 'Content',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
+
+
+
 }

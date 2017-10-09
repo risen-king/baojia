@@ -2,8 +2,9 @@
 
 namespace backend\models;
 
-use Yii;
 
+use Yii;
+use common\component\TimestampBehavior;
 /**
  * This is the model class for table "finance_record".
  *
@@ -27,6 +28,18 @@ class Money extends \yii\db\ActiveRecord
     
     //默认付款方式
     public $pay_name='bank';
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+
+
+            ],
+
+        ];
+    }
     
     /**
      * @inheritdoc

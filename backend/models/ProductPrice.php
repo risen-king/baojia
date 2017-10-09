@@ -61,7 +61,7 @@ class ProductPrice extends ProductPriceBase
     /*
      * 如果插入数据或更新数据，则更新Product价格
      */
-    public   function afterSave($insert, $changedAttributes) {
+    public  function afterSave($insert, $changedAttributes) {
       
         parent::afterSave($insert, $changedAttributes);
 

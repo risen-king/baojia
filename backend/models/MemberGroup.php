@@ -41,4 +41,16 @@ class MemberGroup extends \yii\db\ActiveRecord
             'groupname' => 'Group Name',
         ];
     }
+
+    public function getGroupList(){
+        $_arr =  static::find()->select(['id','groupname'])->asArray()->indexBy('id')->all();
+
+        $arr = [];
+        foreach ($_arr as $key => $val){
+            $arr[$key] = $val['groupname'];
+        }
+
+        return $arr;
+
+    }
 }

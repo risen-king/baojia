@@ -19,4 +19,19 @@
 <?= $form->field($user, 'group_id')->dropDownList($user->groupList)->label(\Yii::t('user', 'Groupname')) ?>
 <?= $form->field($user, 'email')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'username')->textInput(['maxlength' => 255]) ?>
+<?= $form->field($user, 'nickname')->textInput(['maxlength' => 255]) ?>
+<?= $form->field($user, 'mobile')->textInput(['maxlength' => 255]) ?>
+<?= $form->field($user, 'money')->textInput(['maxlength' => 255]) ?>
+<?= $form->field($user, 'credit')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'password')->passwordInput() ?>
+
+
+<?= $form->field($user, 'registration_ip')->textInput(['maxlength' => 20, 'readonly' => 'true']) ?>
+<?= $form->field($user, 'created_at')->textInput(['maxlength' => 20, 'readonly' => 'true']) ?>
+<?= $form->field($user, 'confirmStatus')->textInput(['maxlength' => 20, 'readonly' => 'true']) ?>
+<?= $form->field($user, 'blockStatus')->textInput(['maxlength' => 20, 'readonly' => 'true']) ?>
+
+
+
+
+

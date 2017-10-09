@@ -27,18 +27,13 @@ class Product extends ProductBase
              'id',
              'symbol',
              'name',
-             'prev_price',
+             'adj_close',
              'price',
              'rate',
              'ratestr'
 
          ];
     }
-
-
-
-
-
 
 
 

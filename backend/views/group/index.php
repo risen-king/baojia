@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\MemberGroupSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Member Groups';
+$this->title = 'User Groups';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="member-group-index">

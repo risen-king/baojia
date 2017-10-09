@@ -4,7 +4,9 @@ namespace api\models;
 
 use yii\db\ActiveRecord;
 
-class StockPrice extends ActiveRecord
+use common\models\ProductPrice as ProductPriceBase;
+
+class ProductPrice extends ProductPriceBase
 {
      public function rules()
     {

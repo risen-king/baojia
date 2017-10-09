@@ -10,8 +10,69 @@ use common\models\User as BaseUser;
  
 class User extends BaseUser
 {
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+
+        return [
+            [['username','nickname','email','mobile','avatar'], 'safe'],
+
+            'mobileRequired' => ['mobile', 'required', 'message' => '手机不可以为空'],
+            'mobileLength' => ['mobile', 'string', 'min' => 2, 'max' => 13],
+            'mobileUnique' => [
+                'mobile',
+                'unique',
+                'message' => '用户名已存在.',
+                'targetClass' => '\api\models\User',
+                'when'=> function($model, $attribute){
+                    // 邮箱不为空时候检查唯一性
+                    //return  !!$attribute;
+                    return false;
+                }
+            ],
+            'mobileTrim'     => ['mobile', 'trim'],
 
 
+            //'emailRequired' => ['email', 'required', 'message' => '邮箱不可以为空'],
+            //'emailTrim'     => ['email', 'trim'],
+            //'emailLength' => ['email', 'string', 'min' => 2, 'max' => 13],
+//            'emailUnique' => [
+//                'email',
+//                'unique',
+//                'message' => '邮箱已存在.',
+//                'targetClass' => '\api\models\User',
+//                'when'=> function($model, $attribute){
+//                    // 邮箱不为空时候检查唯一性
+//                    return  !!$attribute;
+//                    //return false;
+//                }
+//            ],
+
+        ];
+    }
+
+    // 明确列出每个字段，适用于你希望数据表或
+    // 模型属性修改时不导致你的字段修改（保持后端API兼容性）
+    public function fields()
+    {
+
+        return [
+            'id',
+            'username',
+            'nickname',
+
+            'email',
+            'mobile',
+            'money',
+            'credit',
+            'avatar',
+            'access_token',
+
+
+        ];
+    }
     /**
     * 生成 access_token
     */

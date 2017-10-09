@@ -15,8 +15,8 @@ use yii\helpers\Url;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
-use backend\models\Member as User;
-use backend\models\MemberSearch as UserSearch;
+use backend\models\User;
+use backend\models\UserSearch;
 use backend\models\Profile;
 
 /**
@@ -45,7 +45,7 @@ class MemberController extends Controller
      */
     public function actionIndex()
     {
-         Url::remember('', 'actions-redirect');
+        Url::remember('', 'actions-redirect');
         
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

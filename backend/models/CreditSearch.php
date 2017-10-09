@@ -22,8 +22,9 @@ class CreditSearch extends Credit
     public function rules()
     {
         return [
-            [['itemid', 'amount','income','outcome', 'balance', 'addtime'], 'integer'],
-            
+            [['itemid', 'amount','income','outcome', 'balance'], 'integer'],
+            [['itemid', 'amount','income','outcome', 'balance'], 'integer'],
+
             [['username', 'reason', 'note', 'editor'], 'safe'],
         ];
     }
@@ -69,7 +70,7 @@ class CreditSearch extends Credit
             'itemid' => $this->itemid,
             'amount' => $this->amount,
             'balance' => $this->balance,
-            'addtime' => $this->addtime,
+            'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

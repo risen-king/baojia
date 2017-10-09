@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
+
+
+use kartik\form\ActiveForm;
 
 use pjkui\kindeditor\KindEditor;
 use kartik\file\FileInput;

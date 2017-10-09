@@ -1,7 +1,9 @@
 <?php
 namespace backend\models;
 
+
 use Yii;
+use common\component\TimestampBehavior;
 
 /**
  * This is the model class for table "finance_credit".
@@ -22,9 +24,15 @@ class Credit extends \yii\db\ActiveRecord
     public $type;
     //支付密码
     public $password;
-    
-    
-    
+
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+
+        ];
+    }
    
     
     /**
@@ -41,7 +49,7 @@ class Credit extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['amount', 'balance', 'addtime'], 'integer'],
+            [['amount', 'balance'], 'integer'],
             [['username', 'editor'], 'string', 'max' => 30],
             [['reason', 'note'], 'string', 'max' => 255],
             [['type','direction','password'],'safe']
@@ -60,7 +68,7 @@ class Credit extends \yii\db\ActiveRecord
             'username' => Yii::t('common/money', 'Username'),
             'amount' => Yii::t('common/money', 'Amount'),
             'balance' => Yii::t('common/money', 'Balance'),
-            'addtime' => Yii::t('common/money', 'Addtime'),
+            'created_time' => Yii::t('common/money', 'Addtime'),
             'reason' => Yii::t('common/money', 'Reason'),
             'note' => Yii::t('common/money', 'Note'),
             'reason'=>Yii::t('common/money', 'Reason'),

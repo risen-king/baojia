@@ -25,21 +25,7 @@ class MoneyController extends Controller
         ]);
     }
  
-    /**
-     * Finds the Record model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Record the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Money::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+
     
     
     /**
@@ -50,17 +36,33 @@ class MoneyController extends Controller
         $model = new Money();
 
         if ( $model->load(Yii::$app->request->post()) ) {
-                
-            $model->username || $this->error(Yii::t('common/money','Username Needed!')); 
-            //$model->reason || $this->error(Yii::t('common/money','Reason Needed!'));
-            $model->bank || $this->error(Yii::t('common/money','Bank Needed!'));
-             
-            $model->amount || $this->error(Yii::t('common/money','Money Amount Needed!'));
-            intval($model->amount) < 0  || $this->error(Yii::t('common/money','Money amount must be great than 0 '));
+
+            if(!$model->username ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Username Needed!'));
+                return $this->refresh();
+            }
+
+            if(!$model->bank ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Bank Needed!'));
+                return $this->refresh();
+            }
+
+            if(!$model->amount ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Money Amount Needed!'));
+                return $this->refresh();
+            }
+
+
+            if(intval($model->amount) < 0 ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Money amount must be great than 0 '));
+                return $this->refresh();
+            }
+
+
             !$model->direction && $model->amount = -$model->amount;
             
             $model->reason ||  $model->reason = Yii::t('common/money','cash');
-            $model->note ||  $model->note = Yii::t('common/money','manual');
+            $model->note   ||  $model->note = Yii::t('common/money','manual');
            
             $_editor = Yii::$app->user->identity->username;  
             
@@ -93,14 +95,22 @@ class MoneyController extends Controller
            
             }
 
+
             if($error){
-                $msg = Yii::t('common/money','Operation Success {success} users,errors below: {error}',[
+
+                $msg = \Yii::t('common/money','Operation Success {success} users,errors below: {error}',[
                     'success'=>$success,
                     'error'=>$error
                 ]);
-                $this->error($msg,['create']);
+
+
+                \Yii::$app->getSession()->setFlash('danger', $msg);
+
             }else{
-                $this->success(Yii::t('common/money','Operation Success'),['index']);
+
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('common/money','Operation Success') );
+                return $this->refresh();
+
             }
             
         } else {
@@ -131,6 +141,23 @@ class MoneyController extends Controller
        
         $this->success(Yii::t('common/money','Clear Success'));
    
+    }
+
+
+    /**
+     * Finds the Record model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Record the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Money::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
     
     

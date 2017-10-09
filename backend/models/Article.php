@@ -4,10 +4,9 @@ namespace backend\models;
 
 use Yii;
 
-use common\component\UploadBehavior;
-use common\component\TimestampBehavior;
- 
-use backend\models\Artcat as Category;
+
+use common\models\Article as ArticleBase;
+
  
 
 /**
@@ -19,66 +18,31 @@ use backend\models\Artcat as Category;
  * @property string $created_at
  * @property string $updated_at
  */
-class Article extends \yii\db\ActiveRecord
+class Article extends ArticleBase
 {
-   
-    public function behaviors()
-    {
-        return [
-             TimestampBehavior::className(),
-             UploadBehavior::className()
-        ];
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%article}}';
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['title'], 'required'],
-            [['content'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['title'], 'string', 'max' => 50],
-        ];
-    }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
+
+    public  function beforeSave($insert)
     {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'catid' => '分类',
-            'title' => '标题',
-             'thumb'=>'缩略图',
-             'content'=>'介绍',
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-        ];
+
+        if (!parent::beforeSave($insert)) {
+             return false;
+        }
+
+        if( !$this->digest && $this->content ){
+
+            $content = strip_tags($this->content);
+            //去掉多余空行
+            preg_replace("/(\r\n|\n|\r|\t)/i", '', $content);
+
+            $this->digest = mb_substr($content,0,255);
+
+
+
+        }
+
+        return true;
+
     }
-    
-    public function getCategory(){
-          return   $this->hasOne(Category::className(), ['id'=>'catid']) ;
-    }
-    
-    
-    public function getTree(){
-       
-       return Category::getSelectTree();
-            
-    }
-    
-   
-    
-   
 }

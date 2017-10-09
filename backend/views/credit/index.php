@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['width' => '50'],
             ],
             'balance',
-            'addtime:datetime',
+            'created_at',
             'username',
             'editor',
             'reason',

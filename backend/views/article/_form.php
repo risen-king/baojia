@@ -12,9 +12,9 @@ use kartik\file\FileInput;
 
 <div class="article-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+     <?php $form = ActiveForm::begin(); ?>
     
-    <?= $form->field($model, 'catid')->dropDownList($model->tree,['prompt'=> '请选择']) ?>
+     <?= $form->field($model, 'catid')->dropDownList($model->tree,['prompt'=> '请选择']) ?>
 
      <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
     
@@ -41,6 +41,14 @@ use kartik\file\FileInput;
                     ]
             ]);
      ?>
+
+    <?= $form->field($model, 'money')->textInput() ?>
+
+    <?= $form->field($model, 'credit')->textInput() ?>
+
+    <?= $form->field($model, 'hit')->textInput() ?>
+
+    <?= $form->field($model, 'digest')->textarea() ?>
      
    <?= $form->field($model, 'content')->widget( KindEditor::className(),[
                     'clientOptions'=>[
@@ -64,11 +72,9 @@ use kartik\file\FileInput;
      ?>
     
    
-<!--
-    <?= $form->field($model, 'created_at')->textInput() ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
--->
+
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

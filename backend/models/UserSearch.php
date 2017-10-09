@@ -6,13 +6,16 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-use backend\models\Member as User;
+use backend\models\User as User;
 
 /**
  * UserSearch represents the model behind the search form about `backend\models\User`.
  */
-class MemberSearch extends User
+class UserSearch extends User
 {
+
+
+
     /**
      * @inheritdoc
      */

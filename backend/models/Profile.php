@@ -12,7 +12,7 @@
 namespace backend\models;
  
 use yii\db\ActiveRecord;
-use backend\models\Member as User;
+use backend\models\User as User;
 
 /**
  * This is the model class for table "profile".

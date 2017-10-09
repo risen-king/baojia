@@ -2,6 +2,7 @@
 
 namespace api\modules\v1\controllers;
 
+use api\models\User;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\auth\HttpBasicAuth;
@@ -40,15 +41,15 @@ class UserController extends \yii\rest\ActiveController
          ];
 
 
-         $behaviors['authenticator'] = [
-             'class' => HttpBasicAuth::className() ,
-             'optional' => [
-                 'login',
-                 'signup',
-                 'upload',
-
-             ],
-         ];
+//         $behaviors['authenticator'] = [
+//             'class' => HttpBasicAuth::className() ,
+//             'optional' => [
+//                 'login',
+//                 'signup',
+//                 'upload',
+//
+//             ],
+//         ];
 
          return  $behaviors;
      }
@@ -62,12 +63,9 @@ class UserController extends \yii\rest\ActiveController
             if ( $model->login() )
             {
                   $user = Yii::$app->user->identity;
+                  unset($user->password_hash);
 
-                  return Util::success([
-                        'username'=>$user->username,
-                        'email'=>$user->email,
-                        'access_token'=>$user->access_token,
-                    ]);
+                  return Util::success($user);
 
             } else {
 
@@ -75,7 +73,7 @@ class UserController extends \yii\rest\ActiveController
             }
      }
 
-      /*
+    /*
      * 注册新用户
      */
     public function actionSignup(){
@@ -84,12 +82,9 @@ class UserController extends \yii\rest\ActiveController
 
           $model->setAttributes(Yii::$app->request->post());
 
-          if( $model->signup() ){
+          if( $user = $model->signup() ){
 
-                return Util::success( [
-                        'username'=>$model->username,
-                        'email'=>$model->email
-                    ] );
+                return Util::success($user);
 
           }else{
 
@@ -120,16 +115,30 @@ class UserController extends \yii\rest\ActiveController
    public function actionUpload()
     {
 
-       $model = new UploadForm();
+        $model = new UploadForm();
 
         $result = $model->upload() ;
 
 
+
         if ( $result ) {
-                   // 文件上传成功
-                   return Util::success(  $result );
+
+            $token = \Yii::$app->request->headers->get('Authorization');
+
+            $user = \api\models\User::findIdentityByAccessToken($token);
+            if($user){
+                $user->avatar = $result;
+                $user->save(false);
+            }
+
+
+
+           // 文件上传成功
+           return Util::success(  $result );
+
+
         }else{
-                    return Util::error( $model->getErrors() );
+            return Util::error( $model->getErrors() );
         }
 
      }

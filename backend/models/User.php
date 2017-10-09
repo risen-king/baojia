@@ -8,11 +8,13 @@ use common\component\Mailer;
 
 
 use backend\models\Profile;
-use backend\models\MemberGroup as Group;
+use backend\models\Money;
+use backend\models\Credit;
+
 use common\models\User as BaseUser;
 
  
-class Member extends BaseUser
+class User extends BaseUser
 {
     
     const BEFORE_CREATE   = 'beforeCreate';
@@ -31,8 +33,9 @@ class Member extends BaseUser
     
      /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
-    
-    
+
+
+
     /**
      * @return Mailer
      * @throws \yii\base\InvalidConfigException
@@ -41,7 +44,7 @@ class Member extends BaseUser
     {
         return \Yii::$container->get(Mailer::className());
     }
-    
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -51,50 +54,7 @@ class Member extends BaseUser
     }
     
     
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getGroup()
-    {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
-    }
-    
-    public function getGroupList(){
-          $_arr =  Group::find()->select(['id','groupname'])->asArray()->indexBy('id')->all();
-          
-          $arr = [];
-          foreach ($_arr as $key => $val){
-              $arr[$key] = $val['groupname'];
-          }
-          
-          return $arr;
-        
-    }
-    
-    
-    public static function tableName()
-    {
-        return '{{%member}}';
-    }
-    
-     /** @inheritdoc */
-    public function attributeLabels()
-    {
-       
-        
-        return [
-            'username'          => \Yii::t('user', 'Username'),
-            'email'             => \Yii::t('user', 'Email'),
-            'registration_ip'   => \Yii::t('user', 'Registration ip'),
-            'unconfirmed_email' => \Yii::t('user', 'New email'),
-            'password'          => \Yii::t('user', 'Password'),
-            'created_at'        => \Yii::t('user', 'Registration time'),
-            'last_login_at'     => \Yii::t('user', 'Last login'),
-            'confirmed_at'      => \Yii::t('user', 'Confirmation time'),
-        ];
-        
-      
-    }
+
     
      /** @inheritdoc */
     public function scenarios()
@@ -208,25 +168,10 @@ class Member extends BaseUser
             //$this->_profile->link('user', $this);
         }
     }
-    
-    
-    
-    /**
-     * @return bool Whether the user is confirmed or not.
-     */
-    public function getIsConfirmed()
-    {
-        return $this->confirmed_at != null;
-    }
 
-    /**
-     * @return bool Whether the user is blocked or not.
-     */
-    public function getIsBlocked()
-    {
-        return $this->blocked_at != null;
-    }
-    
+
+
+
     /**
      * Blocks the user by setting 'blocked_at' field to current time and regenerates auth_key.
      */
@@ -267,5 +212,52 @@ class Member extends BaseUser
     public function resetPassword($password)
     {
         return (bool)$this->updateAttributes(['password_hash' => Password::hash($password)]);
+    }
+
+
+    public static function isPayword($username,$password=''){
+        return true;
+    }
+
+    public static function moneyAdd($username,$amount){
+        $user = User::findOne(['username'=>$username]);
+        $user->money += $amount;
+        $user->save();
+    }
+
+    public static function  moneyRecord($username, $amount, $bank, $editor='', $reason='', $note = ''){
+        $user = User::findOne(['username'=>$username]);
+
+        $model  =  new Money();
+        $model->username = $username;
+        $model->bank = $bank;
+        $model->amount = $amount;
+        $model->balance = $user->money;
+        $model->reason = $reason;
+        $model->note = $note;
+        $model->editor = $editor;
+
+        $model->save();
+    }
+
+    public static function  creditAdd($username, $amount) {
+        $user = User::findOne(['username'=>$username]);
+        $user->credit += $amount;
+        $user->save();
+    }
+
+    public static function  creditRecord($username, $amount, $editor='', $reason='', $note = '') {
+        $user = User::findOne(['username'=>$username]);
+
+        $model  =  new Credit();
+        $model->username = $username;
+        $model->amount = $amount;
+        $model->balance = $user->credit;
+        $model->reason = $reason;
+        $model->note = $note;
+        $model->editor = $editor;
+
+        $model->save();
+
     }
 }

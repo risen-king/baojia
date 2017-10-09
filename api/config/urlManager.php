@@ -11,11 +11,13 @@ return [
          'controller' => 'v1/user',
          'extraPatterns' => [
                'OPTIONS,GET,POST   login'  => 'login',
-               'OPTIONS,GET    logout' => 'logout',
+               'OPTIONS,GET        logout' => 'logout',
                'OPTIONS,GET,POST   signup' => 'signup',
                'OPTIONS,POST   avatar' => 'upload',
                'OPTIONS,GET    profile'=> 'profile',
                'OPTIONS,POST   upload' => 'upload',
+
+               //'OPTIONS,PUT,PATCH  update' => 'update',
          ]
      ],
      [

@@ -81,6 +81,7 @@ class LoginForm extends Model
     {
 
 
+
         if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)){
             $this->addError($attribute, Yii::t('user', '用户名或密码错误.') );
 
@@ -96,6 +97,7 @@ class LoginForm extends Model
         if (parent::beforeValidate()) {
 
             $this->user = User::findByMobile(trim($this->login));
+
 
             return true;
         } else {

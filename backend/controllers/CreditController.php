@@ -34,85 +34,105 @@ class CreditController extends Controller
     /**
      * 手工增加/减少积分
      */
-    public function actionCreate($userid=0)
+    public function actionCreate()
     {
-        //$this->test();
+
         $model = new Credit();
 
-        if ( $model->load(Yii::$app->request->post()) ) 
-        {
-            $model->username || $this->error(Yii::t('common/money','Username Needed!')); 
-            //$model->reason || $this->error(Yii::t('common/money','Reason Needed!'));
-            
-            $model->amount || $this->error(Yii::t('common/money','Credit Amount Needed!'));
-            intval($model->amount) < 0  || $this->error(Yii::t('common/money','Credit amount must be great than 0 '));
+        if ( $model->load(Yii::$app->request->post()) ){
+
+            if(!$model->username ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Username Needed!'));
+                return $this->refresh();
+            }
+
+
+            if(intval($model->amount) <= 0 ){
+                \Yii::$app->getSession()->setFlash('danger', Yii::t('common/money','Credit  amount must be great than 0 '));
+                return $this->refresh();
+            }
+
             !$model->direction && $model->amount = -$model->amount;
-           
+
             $model->reason ||  $model->reason = Yii::t('common/money','prize');
             $model->note ||  $model->note = Yii::t('common/money','manual');
-            
-            $_editor = Yii::$app->user->identity->username;  
-            $_credit_name = Yii::$app->params['credit_name'];
-            
+
+            $_editor = Yii::$app->user->identity->username;
+
+            $_credit_name = isset(Yii::$app->params['credit_name']) && Yii::$app->params['credit_name'] ? Yii::$app->params['credit_name'] : Yii::t('common/money','credit');
+
             $error = '';
             $success = 0;
-            foreach( explode("\n", trim($model->username)) as $username) 
+            foreach( explode("\n", trim($model->username)) as $username)
             {
-                    if(! ($username = trim($username)) ){
-                        continue;
-                    }
-                    $user = User::findOne(['username'=>$username]);
-                    if(!$user) {
-                        $error .= '<br/>'. Yii::t('common', '{username} not exsit', ['username' => $username]);
-                        continue;
-                    }
+                if(! ($username = trim($username)) ){
+                    continue;
+                }
+                $user = User::findOne(['username'=>$username]);
+                if(!$user) {
+                    $error .= '<br/>'. Yii::t('common', '{username} not exsit', ['username' => $username]);
+                    continue;
+                }
 
-                    if(!$model->direction && $model->credit < abs($model->amount)) {
-                           
-                            $error .= '<br/>'. Yii::t('common', '{username} {creditname} not enough,current {creditname} is:{credit}', [
-                                    'username' => $username,
-                                    'creditname'=>$_credit_name,
-                                    'credit'=>$user->credit
-                                ]);
-                            continue;
-                    }
-                    ++$success;
+                if(!$model->direction && $model->credit < abs($model->amount)) {
 
-                    User::creditAdd($username, $model->amount);
-                    User::credtRecord($username, $model->amount ,$_editor, $model->reason, $model->note);
-           
+                    $error .= '<br/>'. Yii::t('common', '{username} {creditname} not enough,current {creditname} is:{credit}', [
+                            'username' => $username,
+                            'creditname'=>$_credit_name,
+                            'credit'=>$user->credit
+                        ]);
+                    continue;
+                }
+                ++$success;
+
+                User::creditAdd($username, $model->amount);
+                User::creditRecord($username, $model->amount ,$_editor, $model->reason, $model->note);
+
             }
-            
+
+
+
             if($error){
+
                 $msg = Yii::t('common/money','Operation Success {success} users,errors below: {error}',[
                     'success'=>$success,
                     'error'=>$error
                 ]);
-                $this->error($msg,['create']);
+
+
+                \Yii::$app->getSession()->setFlash('danger', $msg);
+
             }else{
-                $this->success(Yii::t('common/money','Operation Success'),['index']);
+
+                \Yii::$app->getSession()->setFlash('success', \Yii::t('common/money','Operation Success') );
+                return $this->refresh();
+
             }
 
-          
-        } 
-        else 
-        {
+        }else{
             $model->reason = Yii::t('common/money','cash');
+
             $model->note =   Yii::t('common/money','prize');
-            
+
+            $userid = Yii::$app->request->get('userid');
             if($userid) {
-                    $userids = is_array($userid) ? implode(',', $userid) : $userid;
-                    $username = '';
-                    $users = User::findAll(['in','userid',$userids]);
-                    foreach($users as $user){
-                        $username .= $user->username."\n";
-                    }
-                    $model->username = $username;
+                $userids = is_array($userid) ? implode(',', $userid) : $userid;
+                $username = '';
+                $users = User::findAll(['in','userid',$userids]);
+                foreach($users as $user){
+                    $username .= $user->username."\n";
+                }
+                $model->username = $username;
             }
+
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
+
+
+
+
     }
  
     //清理90天之外的积分

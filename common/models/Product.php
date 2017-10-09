@@ -45,12 +45,13 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['ipo_date','catid','prev_price','price','onsale','content'], 'safe'],
+            [['ipo_date','catid','price','adj_close','onsale','content'], 'safe'],
             [['symbol',], 'string', 'max' => 6],
             [['code'], 'string', 'max' => 8],
             [['name'], 'string', 'max' => 50],
         ];
     }
+
 
 
 
@@ -75,26 +76,17 @@ class Product extends \yii\db\ActiveRecord
         ];
     }
 
-
-    public function getCategory(){
-        return   $this->hasOne(Category::className(), ['id'=>'catid']) ;
-    }
-
     public function getRate(){
-        $_price0 = abs($this->adj_close);
-        $_price1 = abs($this->price);
 
-        $result = 0;
 
-        if( $_price0 ){
-            $diff = $_price1 - $_price0;
-            $rate =  100 * $diff / $_price0;
-            $sign = $diff >= 0 ? '+' : '-';
+        $result = '-';
+
+        if($this->changed_rate  !== null){
+
+            $rate =  100 * $this->changed_rate;
+            $sign = $rate >= 0 ? '+' : '-';
 
             $result = sprintf('%s%.2f%%', $sign,abs($rate));
-
-        }else{
-            $result = '-';
 
         }
 
@@ -106,16 +98,12 @@ class Product extends \yii\db\ActiveRecord
 
     public function getRatestr(){
 
-        $_price0 = abs($this->prev_price);
 
-        if( $_price0 ){
 
-            $_price1 = abs($this->price);
+        $result = 'none';
 
-            $result =  boolval( $_price1 - $_price0 ) ? 'up' : 'down';
-
-        }else{
-            $result = 'none';
+        if($this->changed_rate !== null){
+            $this->changed_rate >= 0 ? 'up' : 'down';
         }
 
         return $result;
@@ -124,14 +112,9 @@ class Product extends \yii\db\ActiveRecord
     }
 
 
-
-
-
-
-
-
-
-
+    public function getCategory(){
+        return   $this->hasOne(Category::className(), ['id'=>'catid']) ;
+    }
 
 
 

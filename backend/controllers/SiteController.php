@@ -57,6 +57,8 @@ class SiteController extends Controller
         ];
     }
 
+
+
     /**
      * Displays homepage.
      *
@@ -64,11 +66,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-          
-          
-          
-         $highProducts = ProductSearch::getTop5();
-          $lowProducts = ProductSearch::getTop5(['price' => SORT_ASC]);
+
+        $highProducts = ProductSearch::getTop5();
+        $lowProducts = ProductSearch::getTop5(['price' => SORT_ASC]);
         
         return $this->render('index',[
             'highProducts' => $highProducts,

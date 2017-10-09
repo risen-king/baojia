@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
          
             'title',
-            //'content:ntext',
+
             [
                 'label'=>'创建日期',
                 'attribute'=>'created_at',

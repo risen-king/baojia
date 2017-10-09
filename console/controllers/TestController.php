@@ -11,8 +11,8 @@ use yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
-use common\models\SignUpForm;
-use common\models\User;
+
+use gmars\sms\Sms;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -27,15 +27,32 @@ class TestController extends Controller
 
 
 
-    public function actionSms($mobile)
-    {
+    public function actionSms(){
 
+        $smsObj = new Sms(
+            'ALIDAYU',
+            [
+                'appkey'=>'LTAIB4SuxIPY9UtY',
+                'secretkey'=>'WNaCowi2Ko9HkJW90l5J8gjuCse9nV'
+            ]
+
+        );
+
+        $result = $smsObj->send([
+            'mobile' => '15901635261',
+            'signname' => '王兴传',
+            'templatecode' => 'SMS_99045032',
+            'data' => [
+                'code' => 'asdg',
+                'time' => '2'
+            ],
+        ]);
+
+        if(!$result){
+            print_r($smsObj->errors);
+        }
     }
 
-
-    public function actionMail(){
-
-    }
 
 
 
