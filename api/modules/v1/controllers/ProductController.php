@@ -38,17 +38,20 @@ class  ProductController  extends ActiveController
 
         $word = \Yii::$app->request->get('word','');
 
+        $modelClass = $this->modelClass;
+
         if( $word ){
 
-              $query = $this->modelClass::find()
-                        ->where( ['like', 'symbol',$word] )
-                        ->limit(10);
 
-              $provider = new ActiveDataProvider([
+            $query = $modelClass::find()
+                    ->where( ['like', 'symbol',$word] )
+                    ->limit(10);
+
+            $provider = new ActiveDataProvider([
                         'query'=>$query
-                  ]);
+                ]);
 
-              return  $provider;
+            return  $provider;
 
         }
     }

@@ -43,8 +43,10 @@ class ArticleController extends ActiveController
 
         $word = \Yii::$app->request->get('word','');
 
+        $modelClass = $this->modelClass;
+
         if($word){
-            $query = $this->modelClass::find()
+            $query = $modelClass::find()
                 ->where(['like', 'title', $word])
                 ->limit(10);
 

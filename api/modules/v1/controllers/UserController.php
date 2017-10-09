@@ -112,25 +112,24 @@ class UserController extends \yii\rest\ActiveController
    }
 
 
-   public function actionUpload()
-    {
+   public function actionUpload() {
 
         $model = new UploadForm();
 
         $result = $model->upload() ;
 
-
+        $modelClass = $this->modelClass;
 
         if ( $result ) {
 
             $token = \Yii::$app->request->headers->get('Authorization');
 
-            $user = \api\models\User::findIdentityByAccessToken($token);
+            $user = $modelClass::findIdentityByAccessToken($token);
+
             if($user){
                 $user->avatar = $result;
                 $user->save(false);
             }
-
 
 
            // 文件上传成功
