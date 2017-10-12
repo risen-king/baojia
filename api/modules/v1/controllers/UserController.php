@@ -21,41 +21,75 @@ use common\helper\Util;
 
 use api\models\LoginForm;
 use api\models\SignupForm;
-use api\models\UploadForm;
+//use api\models\UploadForm;
+
+use api\modules\v1\controllers\BaseController  as ActiveController;
 
 
-class UserController extends \yii\rest\ActiveController
+class UserController extends ActiveController
 {
      public $modelClass = 'api\models\User';
 
-     public function behaviors()
+
+     //用户access_token
+     public $token;
+
+     public function init()
      {
-         $behaviors = parent::behaviors();
+         parent::init();
 
-         $behaviors['corsFilter'] = [
-             'class' => Cors::className(),
-             'cors' => [
-                 'Origin' => ['*'],
-                 'Access-Control-Request-Method' => ['GET','POST','PUT'],
-                 'Access-Control-Request-Headers'=>['*']
-             ],
-         ];
-
-
-//         $behaviors['authenticator'] = [
-//             'class' => HttpBasicAuth::className() ,
-//             'optional' => [
-//                 'login',
-//                 'signup',
-//                 'upload',
-//
-//             ],
-//         ];
-
-         unset($behaviors['authenticator']);
-
-         return  $behaviors;
+         $this->token = \Yii::$app->request->headers->get('Authorization');
      }
+
+//     public function behaviors()
+//     {
+//         $behaviors = parent::behaviors();
+//
+//
+//
+//
+////         $behaviors['authenticator'] = [
+////             'class' => HttpBasicAuth::className() ,
+////             'optional' => [
+////                 'login',
+////                 'signup',
+////                 'upload',
+////
+////             ],
+////         ];
+//
+//         return  $behaviors;
+//     }
+
+
+    public function actionUpload(){
+
+        $baseUri =  Yii::$app->request->post('avatar');
+
+        try{
+            $result = Upload::uploadBase64($baseUri);
+
+            $modelClass = $this->modelClass;
+            $user = $modelClass::findIdentityByAccessToken($this->token);
+
+            if($user){
+                $user->avatar = $result;
+                $user->save(false);
+            }
+
+            return Util::success(  $result );
+
+
+        }catch (Exception $e){
+
+            throw $e;
+
+        }
+
+
+    }
+
+
 
      public function actionLogin(){
 
@@ -96,63 +130,57 @@ class UserController extends \yii\rest\ActiveController
           }
 
 
-     }
+    }
 
 
      /**
     * 获取用户信息
     */
-   public function actionUserProfile ($token)
+   public function actionUserProfile ()
    {
-            // 到这一步，token都认为是有效的了
-            // 下面只需要实现业务逻辑即可，下面仅仅作为案例，比如你可能需要关联其他表获取用户信息等等
-            $user = User::findIdentityByAccessToken($token);
-            return [
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email,
-            ];
+        // 到这一步，token都认为是有效的了
+        // 下面只需要实现业务逻辑即可，下面仅仅作为案例，比如你可能需要关联其他表获取用户信息等等
+        $user = User::findIdentityByAccessToken($this->token);
+        return [
+            'id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+        ];
    }
 
 
-   public function actionUpload() {
-
-        $model = new UploadForm();
-
-        //$result = $model->upload($_POST['avatar']) ;
-       $result = '';
-       $avatar = Yii::$app->request->get('avatar');
-       if($avatar){
-
-           $result = Upload::uploadBase64($_POST['avatar']);
-
-       }
-
-
-
-        $modelClass = $this->modelClass;
-
-        echo $result;die;
-
-        if ( $result ) {
-
-            $token = \Yii::$app->request->headers->get('Authorization');
-
-            $user = $modelClass::findIdentityByAccessToken($token);
-
-            if($user){
-                $user->avatar = $result;
-                $user->save(false);
-            }
-
-
-           // 文件上传成功
-           return Util::success(  $result );
+//    public function actionUpload() {
+//
+//
+//
+//        $model = new UploadForm();
+//
+//        $result = $model->upload() ;
+//
+//        $modelClass = $this->modelClass;
+//
+//        if ( $result ) {
+//
+//            $token = \Yii::$app->request->headers->get('Authorization');
+//
+//            $user = $modelClass::findIdentityByAccessToken($token);
+//
+//            if($user){
+//                $user->avatar = $result;
+//                $user->save(false);
+//            }
+//
+//
+//            // 文件上传成功
+//            return Util::success(  $result );
+//
+//
+//        }else{
+//            return Util::error( $model->getErrors() );
+//        }
+//
+//    }
 
 
-        }else{
-            return Util::error( $model->getErrors() );
-        }
 
-     }
 }

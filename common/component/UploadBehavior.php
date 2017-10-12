@@ -8,6 +8,7 @@
 
 namespace common\component;
 
+use common\helper\Upload;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\web\UploadedFile;
@@ -40,11 +41,9 @@ class UploadBehavior  extends  AttributeBehavior
                     ];
          
                 }
+
                 
-                if(  !$this->basePath || !$this->baseUrl ){
-                    $this->basePath = Yii::$app->basePath . '/../upload/'; 
-                    $this->baseUrl = 'http://img.baojia.local/';
-                }
+
           }
           
       
@@ -54,40 +53,24 @@ class UploadBehavior  extends  AttributeBehavior
                 $model = $this->owner;
                 $field = $this->uploadField;
 
-                return static::upload($model, $field);
+                $result = Upload::upload($model, $field);
+
+                if($result){
+
+                    return Upload::upload($model, $field);
+                }else{
+                    return $model->$field;
+                }
+
+
           }
           
           
 
-         public  function upload($model,$field){
 
-                    $fileObj = UploadedFile::getInstance($model, $field);
-                    
-                    if( !$fileObj ){
-                             return $model->$field;
-                    }
-                    
-                    $result = static::getNewName($fileObj);
-
-                    $fileObj->saveAs( $result['path'] );
-
-                     return  $result['url'];
-            
-          }
         
         
-         public function getNewName($fileObj){
-    
-                    $newName =  $fileObj->baseName  . '-' .
-                                            time(). 
-                                            '.' .$fileObj->extension;
-                    
-                    return [
-                            'url' => $this->baseUrl . $newName,
-                            'path' => $this->basePath . $newName
-                    ];
-                   
-          }
+
          
           
 }

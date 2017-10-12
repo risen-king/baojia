@@ -9,9 +9,8 @@
 namespace common\component;
 
 
-use yii\behaviors\TimestampBehavior as BaseBehavior;
 
-class TimestampBehavior extends BaseBehavior{
+class TimestampBehavior extends \yii\behaviors\TimestampBehavior{
     
     protected function getValue($event)
     {

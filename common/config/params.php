@@ -1,6 +1,6 @@
 <?php
 return [
-    'imgServer'=>'http://img.maybe88.com',
+    'imgServer'=>'http://img.baojia.local',
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,

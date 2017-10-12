@@ -25,13 +25,15 @@ class Article extends ArticleBase
 
         unset($fields['content']);
 
-        $fields['created_at'] = function($model) {
-                return date('y-m-d', time($model->created_at));
-            };
 
-        $fields['updated_at'] = function($model) {
-            return date('y-m-d', time($model->updated_at));
-        };
+
+//        $fields['created_at'] = function($model) {
+//                return date('y-m-d', time($model->created_at));
+//            };
+//
+//        $fields['updated_at'] = function($model) {
+//            return date('y-m-d', time($model->updated_at));
+//        };
 
         return $fields;
     }

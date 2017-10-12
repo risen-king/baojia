@@ -56,6 +56,17 @@
                            
                         ],
                     ],
+
+                    [
+                        'label' => '广告管理',
+                        'icon' => 'share',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => '广告管理', 'icon' => 'file-code-o', 'url' => ['/ad'],],
+                            ['label' => '广告位管理', 'icon' => 'dashboard', 'url' => ['/ad-place'],],
+
+                        ],
+                    ],
                     
                      [
                         'label' => '会员管理',

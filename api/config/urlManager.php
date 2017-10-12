@@ -29,6 +29,18 @@ return [
      ],
 
      [
+         'class' => 'yii\rest\UrlRule',
+         'controller' => 'v1/credit',
+
+     ],
+     [
+         'class' => 'yii\rest\UrlRule',
+         'controller' => 'v1/ad',
+
+     ],
+
+
+     [
         'class' => 'yii\rest\UrlRule',
         'controller' =>  'v1/product',
         'extraPatterns' => [
@@ -37,13 +49,16 @@ return [
         ]
 
      ],
-     [
-          'class' => 'yii\rest\UrlRule',
-          'controller' => 'product-price',
-          'extraPatterns' => [
-              'OPTIONS,GET  index/<symbol>' => 'index',
-          ]
-     ],
+//     [
+//          'class' => 'yii\rest\UrlRule',
+//          'controller' => 'product-price',
+//          'extraPatterns' => [
+//              'OPTIONS,GET  index/<symbol>' => 'index',
+//          ]
+//     ],
+
+
+
 
 
  ],
