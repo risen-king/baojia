@@ -51,6 +51,8 @@ class UserController extends \yii\rest\ActiveController
 //             ],
 //         ];
 
+         unset($behaviors['authenticator']);
+
          return  $behaviors;
      }
 
