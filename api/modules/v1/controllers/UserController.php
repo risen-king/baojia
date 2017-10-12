@@ -120,8 +120,14 @@ class UserController extends \yii\rest\ActiveController
         $model = new UploadForm();
 
         //$result = $model->upload($_POST['avatar']) ;
+       $result = '';
+       if($_POST['avatar']){
 
-        $result = Upload::uploadBase64($_POST['avatar']);
+           $result = Upload::uploadBase64($_POST['avatar']);
+
+       }
+
+
 
         $modelClass = $this->modelClass;
 
