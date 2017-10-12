@@ -35,11 +35,12 @@ class Upload{
 
             $newName = static::getNewName($instance);
 
-            $instance->saveAs(static::getRootPath().$newName);
+            $savePath = \Yii::getAlias('@img').$newName;
+            $returnUrl = \Yii::$app->params['imgServer'].$newName;
 
+            $instance->saveAs($savePath);
 
-
-            return  static::getRootUrl().$newName ;
+            return  $returnUrl ;
         }
         
         
@@ -52,17 +53,7 @@ class Upload{
             
         }
 
-        public static function getRootPath(){
 
-            return  \Yii::$app->basePath . '/../upload/';
 
-        }
-
-        public static function getRootUrl(){
-
-            return  'http://img.baojia.local/';
-
-        }
-         
           
 }

@@ -42,6 +42,6 @@ protected/data/*.db
 themes/classic/views/
 
 
-/upload
+/upload/*
 /sql
 

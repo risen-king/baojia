@@ -1,5 +1,6 @@
 <?php
 return [
+    'imgServer'=>'http://img.maybe88.com',
     'adminEmail' => 'admin@example.com',
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
