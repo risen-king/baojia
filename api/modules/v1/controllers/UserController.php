@@ -121,7 +121,8 @@ class UserController extends \yii\rest\ActiveController
 
         //$result = $model->upload($_POST['avatar']) ;
        $result = '';
-       if($_POST['avatar']){
+       $avatar = Yii::$app->request->get('avatar');
+       if($avatar){
 
            $result = Upload::uploadBase64($_POST['avatar']);
 
