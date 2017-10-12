@@ -122,6 +122,8 @@ class UserController extends \yii\rest\ActiveController
 
         $modelClass = $this->modelClass;
 
+        echo $result;die;
+
         if ( $result ) {
 
             $token = \Yii::$app->request->headers->get('Authorization');
