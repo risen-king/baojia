@@ -3,6 +3,7 @@
 namespace api\modules\v1\controllers;
 
 use api\models\User;
+use common\helper\Upload;
 use Yii;
 use yii\filters\auth\QueryParamAuth;
 use yii\filters\auth\HttpBasicAuth;
@@ -118,7 +119,9 @@ class UserController extends \yii\rest\ActiveController
 
         $model = new UploadForm();
 
-        $result = $model->upload() ;
+        //$result = $model->upload($_POST['avatar']) ;
+
+        $result = Upload::uploadBase64($_POST['avatar']);
 
         $modelClass = $this->modelClass;
 
