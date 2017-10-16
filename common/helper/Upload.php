@@ -21,17 +21,14 @@ class Upload{
     
 
         
-        
-    public static function getNewName($file){
+    /*
+     * 参数是字符串时作为文件类型,是对象时是文件对象
+     */
+    public static function genFileName($file){
 
-        $newName = '';
-        if( is_object($file) ){
-            $newName = uniqid(). '.' .$file->extension;
-        }else{
-            time().'.'.$file;
-        }
+        $fileType = is_object($file) ? $file->extension : $file;
 
-        return  $newName;
+        return  uniqid(). '.' . $fileType;
 
     }
 
@@ -60,11 +57,11 @@ class Upload{
 
     public static function getPath($file){
 
-        $newName = static::getNewName($file);
+        $fileName = static::genFileName($file);
 
         $config = static::getConfig();
-        $savePath = $config['savePath'].$newName;
-        $saveUrl  = $config['saveUrl'] .$newName;
+        $savePath = $config['savePath']. $fileName;
+        $saveUrl  = $config['saveUrl'] . $fileName;
 
         return [
             'savePath' => $savePath,
@@ -104,6 +101,7 @@ class Upload{
 
         $result = preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64, $match);
 
+
         //匹配出图片的格式
         if ( $result ) {
 
@@ -113,17 +111,18 @@ class Upload{
 
             $path = static::getPath($type);
 
+
             $_f = file_put_contents($path['savePath'], base64_decode($content));
 
             if($_f){
                 return $path['saveUrl'];
 
             }else{
-                throw new Exception('无法保存文件');
+                throw new \Exception('无法保存文件');
             }
 
         }else{
-            throw new Exception('无法解析文件');
+            throw new \Exception('无法解析文件');
         }
     }
 

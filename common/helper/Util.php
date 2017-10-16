@@ -10,14 +10,14 @@ namespace common\helper;
 
 
 class  Util{
-    public static function format($status,$data,$message){
+    public static function format($success,$data,$message){
           
           if(empty($data)){
               $data = null;
           }
           
           $result = [
-            'status' => $status,
+            'success' => $success,
             'data'=> $data,
             'message'=> $message
          ];
@@ -37,21 +37,21 @@ class  Util{
           }
         
     
-        return static::format( 'error', null, $message);
+        return static::format( false, null, $message);
         
     }
     
     
     public static function  success($data){
         
-        return static::format( 'success', $data, '' );
+        return static::format( true, $data, '' );
         
     }
     
     
     
     //产生指定位数的随机数
-    public static function generateNumber($length=4){
+    public static function generateNumber($length=6){
         $min = pow(10 , ($length - 1));
         $max = pow(10, $length) - 1;
         return rand($min, $max);

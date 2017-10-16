@@ -13,9 +13,10 @@ return [
                'OPTIONS,GET,POST   login'  => 'login',
                'OPTIONS,GET        logout' => 'logout',
                'OPTIONS,GET,POST   signup' => 'signup',
-               'OPTIONS,POST   avatar' => 'upload',
-               'OPTIONS,GET    profile'=> 'profile',
-               'OPTIONS,POST   upload' => 'upload',
+               'OPTIONS,POST       avatar' => 'upload',
+               'OPTIONS,GET        profile'=> 'profile',
+               'OPTIONS,POST       upload' => 'upload',
+               'OPTIONS,GET        sms'    => 'sms',
 
                //'OPTIONS,PUT,PATCH  update' => 'update',
          ]

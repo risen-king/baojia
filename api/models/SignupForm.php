@@ -26,21 +26,19 @@ class SignupForm extends Model
            return [
 
                'mobileRequired' => ['mobile', 'required', 'message' => '手机不可以为空'],
+               'mobileTrim'     => ['mobile', 'trim'],
                'mobileLength' => ['mobile', 'string', 'min' => 2, 'max' => 13],
                'mobileUnique' => [
                     'mobile',
                     'unique',
-                    'message' => '用户名已存在.',
+                    'message' => '手机号已经注册.',
                     'targetClass' => '\api\models\User',
                     'when'=> function($model, $attribute){
                             // 邮箱不为空时候检查唯一性
-                            //return  !!$attribute;
-                            return false;
+                            return  !!$attribute;
+                            //return false;
                         }
                     ],
-               'mobileTrim'     => ['mobile', 'trim'],
-
-
 
                'passwordRequired' => ['password', 'required', 'message' => '密码不可以为空'],
                'passwordLength'   => ['password', 'string', 'min' => 6, 'tooShort' => '密码至少填写6位'],

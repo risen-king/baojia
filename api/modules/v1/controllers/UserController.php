@@ -30,6 +30,11 @@ class UserController extends ActiveController
 {
      public $modelClass = 'api\models\User';
 
+    public $serializer = [
+        'class' => 'yii\rest\Serializer',
+        'collectionEnvelope' => 'items',
+    ];
+
 
      //用户access_token
      public $token;
@@ -38,7 +43,11 @@ class UserController extends ActiveController
      {
          parent::init();
 
-         $this->token = \Yii::$app->request->headers->get('Authorization');
+         $authHeader = \Yii::$app->request->getHeaders()->get('Authorization');
+         $this->token =  $authHeader ;
+
+
+         //die;
      }
 
 //     public function behaviors()
@@ -66,8 +75,38 @@ class UserController extends ActiveController
 
         $baseUri =  Yii::$app->request->post('avatar');
 
+        if(\Yii::$app->request->isOptions || !$baseUri){
+            return ;
+        }
+
+
         try{
             $result = Upload::uploadBase64($baseUri);
+
+            $modelClass = $this->modelClass;
+            $user = $modelClass::findIdentityByAccessToken($this->token);
+            $user->avatar = $result;
+            $user->save(false);
+
+            return Util::success(  $result );
+
+
+        }catch (\Exception $e){
+
+            throw $e;
+            //echo $e->getMessage();
+
+        }
+
+    }
+
+    public function actionUploadForm() {
+
+        $model = new UploadForm();
+        $result = $model->upload() ;
+
+
+        if ( $result ) {
 
             $modelClass = $this->modelClass;
             $user = $modelClass::findIdentityByAccessToken($this->token);
@@ -77,15 +116,14 @@ class UserController extends ActiveController
                 $user->save(false);
             }
 
+
+            // 文件上传成功
             return Util::success(  $result );
 
 
-        }catch (Exception $e){
-
-            throw $e;
-
+        }else{
+            return Util::error( $model->getErrors() );
         }
-
 
     }
 
@@ -93,22 +131,38 @@ class UserController extends ActiveController
 
      public function actionLogin(){
 
-            $model = new LoginForm;
+        $model = new LoginForm;
 
-            $model->setAttributes( Yii::$app->request->post() );
+        $model->setAttributes( Yii::$app->request->post() );
 
-            if ( $model->login() )
-            {
-                  $user = Yii::$app->user->identity;
-                  unset($user->password_hash);
+        if ( $model->login() )
+        {
+              $user = Yii::$app->user->identity;
+              unset($user->password_hash);
 
-                  return Util::success($user);
+              return Util::success($user);
+              //return $user;
 
-            } else {
+        } else {
+            //throw new \Exception( current(current($model->getErrors())) );
 
-                  return Util::error( $model->getErrors() );
-            }
+            return Util::error( current(current($model->getErrors())) );
+        }
      }
+
+
+    public function actionLogout(){
+
+        $modelClass = $this->modelClass;
+
+        $user = $modelClass::findIdentityByAccessToken($this->token);
+        $user->access_token = '';
+        $user->save(false);
+
+        return Util::success('成功退出');
+
+
+    }
 
     /*
      * 注册新用户
@@ -148,39 +202,33 @@ class UserController extends ActiveController
         ];
    }
 
+    public function actionSms(){
 
-//    public function actionUpload() {
-//
-//
-//
-//        $model = new UploadForm();
-//
-//        $result = $model->upload() ;
-//
-//        $modelClass = $this->modelClass;
-//
-//        if ( $result ) {
-//
-//            $token = \Yii::$app->request->headers->get('Authorization');
-//
-//            $user = $modelClass::findIdentityByAccessToken($token);
-//
-//            if($user){
-//                $user->avatar = $result;
-//                $user->save(false);
-//            }
-//
-//
-//            // 文件上传成功
-//            return Util::success(  $result );
-//
-//
-//        }else{
-//            return Util::error( $model->getErrors() );
-//        }
-//
-//    }
+        $smsConfig = \Yii::$app->params['sms']['aliyun'];
+        $sms = new \common\component\dysms\Sms($smsConfig['accessKeyId'],$smsConfig['accessKeySecret']);
 
+        $phoneNumber = $smsConfig['phoneNumber'];
+        $code = Util::generateNumber(6);
+        $params = [
+            "code"=> $code,
+            "product"=>"productName"
+        ];
+
+
+//        $response = $sms->sendSms(
+//            $smsConfig['signName'],
+//            $smsConfig['templateCode'],
+//            $phoneNumber,
+//            $params
+//
+//        );
+
+        return Util::success($code);
+
+        //print_r($response);
+
+
+    }
 
 
 }

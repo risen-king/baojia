@@ -10,4 +10,6 @@ class AdController extends ActiveController
 {
     public $modelClass = 'api\models\Ad';
 
+
+
 }

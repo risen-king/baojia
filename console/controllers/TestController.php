@@ -7,12 +7,15 @@
 
 namespace console\controllers;
 
+use common\helper\Util;
 use yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
 
-use gmars\sms\Sms;
+//use gmars\sms\Sms;
+
+use common\component\dysms\Sms;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -27,30 +30,59 @@ class TestController extends Controller
 
 
 
+//    public function actionSms(){
+//
+//        $smsObj = new Sms(
+//            'ALIYUN',
+//            [
+//                'appkey'=>'LTAIB4SuxIPY9UtY',
+//                'secretkey'=>'WNaCowi2Ko9HkJW90l5J8gjuCse9nV'
+//            ]
+//
+//        );
+//
+//        $result = $smsObj->send([
+//            'mobile' => '15901635261',
+//            'signname' => '王兴传',
+//            'templatecode' => 'SMS_99045032',
+//            'data' => [
+//                'code' => 'asdg',
+//                'time' => '2'
+//            ],
+//        ]);
+//
+//        if(!$result){
+//            print_r($smsObj->errors);
+//        }
+//    }
+
+
+
     public function actionSms(){
 
-        $smsObj = new Sms(
-            'ALIDAYU',
-            [
-                'appkey'=>'LTAIB4SuxIPY9UtY',
-                'secretkey'=>'WNaCowi2Ko9HkJW90l5J8gjuCse9nV'
-            ]
+        $smsConfig = \Yii::$app->params['sms']['aliyun'];
+        $sms = new Sms($smsConfig['accessKeyId'],$smsConfig['accessKeySecret']);
+
+        $phoneNumber = $smsConfig['phoneNumber'];
+        $code = Util::generateNumber(6);
+        $params = [
+            "code"=> $code,
+            "product"=>"productName"
+        ];
+
+
+        $response = $sms->sendSms(
+            $smsConfig['signName'],
+            $smsConfig['templateCode'],
+            $phoneNumber,
+            $params
 
         );
 
-        $result = $smsObj->send([
-            'mobile' => '15901635261',
-            'signname' => '王兴传',
-            'templatecode' => 'SMS_99045032',
-            'data' => [
-                'code' => 'asdg',
-                'time' => '2'
-            ],
-        ]);
 
-        if(!$result){
-            print_r($smsObj->errors);
-        }
+
+        print_r($response);
+
     }
 
 

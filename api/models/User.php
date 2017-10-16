@@ -122,7 +122,7 @@ class User extends BaseUser
          if(  !static::checkAccessToken($token) ){
             throw  new  UnauthorizedHttpException('access_token is invalid');
          }
-        
+
          return static::findOne(['access_token' => $token]);
     }
 

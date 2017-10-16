@@ -20,4 +20,15 @@ return [
             'thumb'=>'http://demo.destoon.com/v6.0/api/pay/chinabank/logo.gif'
         ]
     ],
+
+    'sms'=>[
+        'aliyun'=>[
+            'accessKeyId'=>'LTAIB4SuxIPY9UtY',
+            'accessKeySecret'=>'WNaCowi2Ko9HkJW90l5J8gjuCse9nV',
+            'signName'=>'王兴传',
+            'templateCode'=>'SMS_99045032',
+            'phoneNumber'=>'15901635261'
+
+        ]
+    ],
 ];

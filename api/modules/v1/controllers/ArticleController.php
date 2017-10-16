@@ -18,17 +18,19 @@ class ArticleController extends ActiveController
      * @param $word
      * @return ActiveDataProvider
      */
-    public function actionSearch($word){
+    public function actionSearch(){
 
 
-        $word = \Yii::$app->request->get('word','');
+        $word = \Yii::$app->request->get('keyword','');
+        //echo $word;die;
 
         $modelClass = $this->modelClass;
 
         if($word){
             $query = $modelClass::find()
-                ->where(['like', 'title', $word])
-                ->limit(10);
+                    ->where(['like', 'title', $word]);
+
+            //echo $query->createCommand()->getRawSql();die;
 
             $provider = new ActiveDataProvider([
                 'query'=>$query
