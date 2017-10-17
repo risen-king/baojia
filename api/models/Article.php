@@ -23,7 +23,7 @@ class Article extends ArticleBase
     {
         $fields = parent::fields();
 
-        unset($fields['content']);
+        //unset($fields['content']);
 
 
 
