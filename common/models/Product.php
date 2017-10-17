@@ -76,40 +76,7 @@ class Product extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getRate(){
 
-
-        $result = '-';
-
-        if($this->changed_rate  !== null){
-
-            $rate =  100 * $this->changed_rate;
-            $sign = $rate >= 0 ? '+' : '-';
-
-            $result = sprintf('%s%.2f%%', $sign,abs($rate));
-
-        }
-
-        return $result;
-
-
-    }
-
-
-    public function getRatestr(){
-
-
-
-        $result = 'none';
-
-        if($this->changed_rate !== null){
-            $this->changed_rate >= 0 ? 'up' : 'down';
-        }
-
-        return $result;
-
-
-    }
 
 
     public function getCategory(){

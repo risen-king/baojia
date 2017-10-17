@@ -105,11 +105,15 @@ class User extends BaseUser
              return false;
          }
 
-         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+         $tokenTimestamp = (int) substr($token, strrpos($token, '_') + 1);
 
-         $expire =  isset ( Yii::$app->params['user.accessTokenExpire'] ) && !empty( Yii::$app->params['user.accessTokenExpire'] ) ? Yii::$app->params['user.accessTokenExpire'] : 3600;
+         $tokenExpire =  isset ( Yii::$app->params['user.accessTokenExpire'] )
+                        && !empty( Yii::$app->params['user.accessTokenExpire'] ) ?
+                                Yii::$app->params['user.accessTokenExpire'] : 3600*24*2;
 
-         return $timestamp + $expire >= time();
+         $result = $tokenTimestamp + $tokenExpire -time();
+
+         return $result > 0;
      } 
          
          
@@ -122,6 +126,7 @@ class User extends BaseUser
          if(  !static::checkAccessToken($token) ){
             throw  new  UnauthorizedHttpException('access_token is invalid');
          }
+
 
          return static::findOne(['access_token' => $token]);
     }

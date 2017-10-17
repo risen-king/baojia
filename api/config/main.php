@@ -42,11 +42,7 @@ return [
             'identityClass' => 'api\models\User',
             'enableAutoLogin' => true,
             'enableSession' => false,
-            //'identityCookie' => ['name' => '_identity-api', 'httpOnly' => true],
-        ],
-        'session' => [
-            // this is the name of the session cookie used for login on the api
-            'name' => 'advanced-api',
+            'loginUrl' => null,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -57,9 +53,9 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
-        ],
+//        'errorHandler' => [
+//            'errorAction' => 'site/error',
+//        ],
         'urlManager' => $urlManager,
     ],
     'params' => $params,

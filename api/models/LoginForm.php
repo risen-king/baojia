@@ -60,11 +60,13 @@ class LoginForm extends Model
      */
     public function login()
     {
+
         if ( $this->validate() ) {
 
             $this->user->last_login_at=time();
             $this->user->generateAccessToken();
-            $this->user->save(false);
+
+            $result = $this->user->save(false);
 
             return Yii::$app->user->login($this->user, $this->rememberMe ? 3600*24*30 : 0);
             
@@ -80,14 +82,9 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
 
-
-
         if ($this->user === null || !Password::validate($this->password, $this->user->password_hash)){
             $this->addError($attribute, Yii::t('user', '用户名或密码错误.') );
-
         }
-
-
     }
 
 
@@ -97,7 +94,6 @@ class LoginForm extends Model
         if (parent::beforeValidate()) {
 
             $this->user = User::findByMobile(trim($this->login));
-
 
             return true;
         } else {

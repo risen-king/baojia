@@ -3,9 +3,7 @@
 namespace backend\models;
 
 use Yii;
-use common\models\ProductPrice as ProductPriceBase;
 
-use backend\models\Product as Product;
 
 /**
  * This is the model class for table "stock_price".
@@ -27,7 +25,7 @@ use backend\models\Product as Product;
  * @property string $gmw
  * @property string $emv
  */
-class ProductPrice extends ProductPriceBase
+class ProductPrice extends \common\models\ProductPrice
 {
 
     public function getAdjModel($time=null){
@@ -45,10 +43,7 @@ class ProductPrice extends ProductPriceBase
         $date = date('Y-m-d',$time);
 
         $adjModel = static::find()
-            ->where([
-                'symbol'=>$this->symbol,
-                'date'=> $date,
-            ])
+            ->where(['symbol'=>$this->symbol, 'date'=> $date])
             ->orderBy('date DESC')
             ->limit(1)
             ->one();
@@ -66,28 +61,27 @@ class ProductPrice extends ProductPriceBase
         parent::afterSave($insert, $changedAttributes);
 
         //更新 adj_close
-        if($this->close && $this->date && !$this->adj_close){
+        if( $this->close && !$this->adj_close && $this->date )
+        {
             //查找前一日记录
             $adjModel =  $this->getAdjModel($this->date);
 
             if($adjModel->close){
+
                 $this->adj_close = $adjModel->close;
+
                 $this->change = $this->close - $this->adj_close;
                 $this->changed_rate = $this->change / $this->adj_close;
 
                 $this->save(false);
             }
 
-
         }
 
 
         //查找当日价格
         $priceModel = static::find()
-                    ->where([
-                            'symbol'=>$this->symbol,
-                            'date'=> date('Y-m-d'),
-                        ])
+                    ->where(['symbol'=>$this->symbol, 'date'=> date('Y-m-d')])
                     ->orderBy('date DESC')
                     ->limit(1)
                     ->one();
@@ -95,8 +89,9 @@ class ProductPrice extends ProductPriceBase
         if($priceModel){
             $this->product->price = $priceModel->close;
             $this->product->adj_close = $priceModel->adj_close;
-            $this->product->change = $priceModel->change;
-            $this->product->changed_rate = $priceModel->changed_rate;
+
+            //$this->product->change = $priceModel->change;
+            //$this->product->changed_rate = $priceModel->changed_rate;
 
             $this->product->save(false);
         }

@@ -39,90 +39,47 @@ class UserController extends ActiveController
      //用户access_token
      public $token;
 
+
      public function init()
      {
          parent::init();
 
          $authHeader = \Yii::$app->request->getHeaders()->get('Authorization');
-         $this->token =  $authHeader ;
+         if ($authHeader !== null && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
+             $this->token =  $matches[1];
+         }
 
-
-         //die;
      }
 
-//     public function behaviors()
-//     {
-//         $behaviors = parent::behaviors();
-//
-//
-//
-//
-////         $behaviors['authenticator'] = [
-////             'class' => HttpBasicAuth::className() ,
-////             'optional' => [
-////                 'login',
-////                 'signup',
-////                 'upload',
-////
-////             ],
-////         ];
-//
-//         return  $behaviors;
-//     }
+     private function getUser($token){
+
+         $modelClass = $this->modelClass;
+         $user = $modelClass::findIdentityByAccessToken($token);
+         return $user;
+
+     }
 
 
+    //上传用户头像
     public function actionUpload(){
 
-        $baseUri =  Yii::$app->request->post('avatar');
-
-        if(\Yii::$app->request->isOptions || !$baseUri){
+        $base64Content =  Yii::$app->request->post('avatar');
+        if(!$base64Content){
             return ;
         }
 
-
         try{
-            $result = Upload::uploadBase64($baseUri);
+            $result = Upload::uploadBase64($base64Content);
 
-            $modelClass = $this->modelClass;
-            $user = $modelClass::findIdentityByAccessToken($this->token);
+            $user = $this->getUser($this->token);
             $user->avatar = $result;
             $user->save(false);
 
-            return Util::success(  $result );
-
+            return Util::success($result);
 
         }catch (\Exception $e){
 
             throw $e;
-            //echo $e->getMessage();
-
-        }
-
-    }
-
-    public function actionUploadForm() {
-
-        $model = new UploadForm();
-        $result = $model->upload() ;
-
-
-        if ( $result ) {
-
-            $modelClass = $this->modelClass;
-            $user = $modelClass::findIdentityByAccessToken($this->token);
-
-            if($user){
-                $user->avatar = $result;
-                $user->save(false);
-            }
-
-
-            // 文件上传成功
-            return Util::success(  $result );
-
-
-        }else{
-            return Util::error( $model->getErrors() );
         }
 
     }
@@ -141,7 +98,7 @@ class UserController extends ActiveController
               unset($user->password_hash);
 
               return Util::success($user);
-              //return $user;
+
 
         } else {
             //throw new \Exception( current(current($model->getErrors())) );
@@ -152,16 +109,12 @@ class UserController extends ActiveController
 
 
     public function actionLogout(){
-
-        $modelClass = $this->modelClass;
-
-        $user = $modelClass::findIdentityByAccessToken($this->token);
-        $user->access_token = '';
-        $user->save(false);
-
+        $user = $this->getUser($this->token);
+        if($user){
+            $user->access_token = '';
+            $user->save(false);
+        }
         return Util::success('成功退出');
-
-
     }
 
     /*
@@ -174,16 +127,10 @@ class UserController extends ActiveController
           $model->setAttributes(Yii::$app->request->post());
 
           if( $user = $model->signup() ){
-
                 return Util::success($user);
-
           }else{
-
                return Util::error( $model->getErrors() );
-
           }
-
-
     }
 
 
@@ -215,13 +162,13 @@ class UserController extends ActiveController
         ];
 
 
-//        $response = $sms->sendSms(
-//            $smsConfig['signName'],
-//            $smsConfig['templateCode'],
-//            $phoneNumber,
-//            $params
-//
-//        );
+        $response = $sms->sendSms(
+            $smsConfig['signName'],
+            $smsConfig['templateCode'],
+            $phoneNumber,
+            $params
+
+        );
 
         return Util::success($code);
 
@@ -229,6 +176,55 @@ class UserController extends ActiveController
 
 
     }
+
+
+//    public function actionUploadForm() {
+//
+//        $model = new UploadForm();
+//        $result = $model->upload() ;
+//
+//
+//        if ( $result ) {
+//
+//            $modelClass = $this->modelClass;
+//            $user = $modelClass::findIdentityByAccessToken($this->token);
+//
+//            if($user){
+//                $user->avatar = $result;
+//                $user->save(false);
+//            }
+//
+//            return Util::success(  $result );
+//
+//
+//        }else{
+//            return Util::error( $model->getErrors() );
+//        }
+//
+//    }
+
+
+
+//     public function behaviors()
+//     {
+//         $behaviors = parent::behaviors();
+//
+//
+//
+//
+////         $behaviors['authenticator'] = [
+////             'class' => HttpBasicAuth::className() ,
+////             'optional' => [
+////                 'login',
+////                 'signup',
+////                 'upload',
+////
+////             ],
+////         ];
+//
+//         return  $behaviors;
+//     }
+
 
 
 }

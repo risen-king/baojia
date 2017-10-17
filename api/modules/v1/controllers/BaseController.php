@@ -9,12 +9,9 @@ use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\Cors;
-
 use yii\helpers\ArrayHelper;
+
 use common\helper\Util;
-
-
-
 
 
 class BaseController extends \yii\rest\ActiveController
@@ -40,7 +37,6 @@ class BaseController extends \yii\rest\ActiveController
                  'Access-Control-Request-Headers'=>['*']
              ],
          ];
-
 
 
          return  $behaviors;
