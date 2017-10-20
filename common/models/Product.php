@@ -76,6 +76,35 @@ class Product extends \yii\db\ActiveRecord
         ];
     }
 
+    //价格变化率
+    public function getRate(){
+
+        $change = $this->getChange();
+
+        if($change && $this->adj_close != 0){
+
+            $rate = $change / $this->adj_close;
+
+            $sign = $rate >= 0 ? '+' : '-';
+            $result = sprintf('%s%.2f%%', $sign, 100*abs($rate) );
+
+            return $result;
+
+        }else{
+            return null;
+        }
+    }
+
+    //产品价格变化
+    public function getChange(){
+
+        if($this->price >= 0 && $this->adj_close >= 0 ){
+            return $this->price - $this->adj_close;
+        }else{
+            return null;
+        }
+    }
+
 
 
 
